@@ -153,20 +153,18 @@
       return JSON.parse(localStorage.getItem('earth_registered_students')) || [];
     }
 
-    // ધોરણ ૧ થી ૧૨ નું માસ્ટર વેરિફિકેશન લિસ્ટ મેળવવું
+    // ધોરણ ૧ થી ૧૨ નું માસ્ટર લિસ્ટ (જેમાં તમે અગાઉથી પણ નામ રાખી શકો છો)
     function getMasterStudentsByStd() {
       const data = localStorage.getItem('earth_master_students_by_std');
-      if (data) {
-        return JSON.parse(data);
-      }
-      // જો એડમિને નવું લિસ્ટ ન નાખ્યું હોય તો ડિફોલ્ટ લિસ્ટ (તમે અહીં પણ સીધા નામ ઉમેરી શકો છો)
-      return {
-        "1": [], "2": [], "3": [], "4": [], "5": [], "6": [],
-        "7": [], "8": [], "9": [],
-        "10": ["Raj Chavda", "Preet Patel"],
-        "11": ["Priya Shah"],
-        "12": ["Hetvi Desai"]
-      };
+      if (data) return JSON.parse(data);
+      
+      // જો એડમિને લિસ્ટ સેવ ન કર્યું હોય તો ડિફોલ્ટ લિસ્ટ
+      let defaults = {};
+      for(let i = 1; i <= 12; i++) { defaults[i] = []; }
+      defaults["10"] = ["Raj Chavda", "Preet Patel"];
+      defaults["11"] = ["Priya Shah"];
+      defaults["12"] = ["Hetvi Desai"];
+      return defaults;
     }
 
     function getRegisteredStudents() {
@@ -180,34 +178,30 @@
       const phone = document.getElementById('stuPhone').value.trim();
       const alertBox = document.getElementById('alertMsg');
 
-      // ૧. ધોરણ વાઈઝ ડેટા ફેચ કરવો
+      // ૧. ધોરણ પ્રમાણે વેરિફિકેશન
       const masterByStd = getMasterStudentsByStd();
       const selectedStdList = masterByStd[std] || [];
 
-      // ૨. તે પસંદ કરેલા ધોરણમાં નામ છે કે નહીં તેની કડક ચકાસણી
-      const isMatched = selectedStdList.some(masterName => 
-        masterName.trim().toLowerCase() === name.toLowerCase()
-      );
+      const isMatched = selectedStdList.some(mName => mName.trim().toLowerCase() === name.toLowerCase());
 
-      // જો તે ધોરણમાં નામ ન મળે તો પાસ બનશે જ નહીં
       if (!isMatched) {
         alertBox.className = "p-3 rounded-xl text-xs font-semibold mb-4 border bg-red-600/20 text-red-400 border-red-500/40 block";
-        alertBox.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i> <strong>માન્યતા અસ્વીકાર્ય!</strong> ધોરણ ${std} ના ક્લાસ રેકોર્ડમાં "${name}" નામ મળ્યું નથી. કૃપા કરીને સાચું ધોરણ પસંદ કરો અથવા ઓફિસ પર સંપર્ક કરો.`;
+        alertBox.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i> <strong>માન્યતા અસ્વીકાર્ય!</strong> ધોરણ ${std} ના લિસ્ટમાં "${name}" નામ મળ્યું નથી.`;
         document.getElementById('passDisplayArea').classList.add('hidden');
         return;
       }
 
-      // ૩. એકવાર પાસ બની ગયા પછી ફરીથી બનવા પર પ્રતિબંધ
+      // ૨. ડુપ્લિકેટ રજીસ્ટ્રેશન રોકવું
       const registeredList = getRegisteredStudents();
-      const existing = registeredList.find(s => s.name.toLowerCase() === name.toLowerCase());
+      const existing = registeredList.find(s => s.name.trim().toLowerCase() === name.toLowerCase());
       if (existing) {
         alertBox.className = "p-3 rounded-xl text-xs font-semibold mb-4 border bg-red-600/20 text-red-400 border-red-500/40 block";
-        alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>રજીસ્ટ્રેશન બ્લોક!</strong> આ નામ પરથી પહેલેથી જ પાસ બની ગયેલ છે. એક વિદ્યાર્થી માટે માત્ર એક જ પાસ માન્ય છે.`;
+        alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>રજીસ્ટ્રેશન બ્લોક!</strong> આ નામ પરથી પહેલેથી પાસ બનેલો છે.`;
         document.getElementById('passDisplayArea').classList.add('hidden');
         return;
       }
 
-      // ૪. જો બધું બરાબર હોય તો જ પાસ બનશે
+      // ૩. નવો પાસ બનાવવો અને સાચા કી-નેમમાં સેવ કરવો
       const newId = "ECG2026-" + String(registeredList.length + 1).padStart(4, '0');
       const newEntry = {
         id: newId,
@@ -219,10 +213,11 @@
       };
 
       registeredList.push(newEntry);
+      // આ કી-નેમ એડમિન પેનલ સાથે ૧૦૦% મેચ થશે
       localStorage.setItem('earth_registered_students', JSON.stringify(registeredList));
 
       alertBox.className = "p-3 rounded-xl text-xs font-semibold mb-4 border bg-emerald-600/20 text-emerald-400 border-emerald-500/40 block";
-      alertBox.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> વેરિફિકેશન સફળ! તમારો પાસ નીચે જનરેટ થઈ ગયો છે.`;
+      alertBox.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> રજીસ્ટ્રેશન સફળ! તમારો પાસ નીચે આવી ગયો છે.`;
 
       showPass(newEntry);
     }
