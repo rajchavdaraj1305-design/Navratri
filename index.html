@@ -153,6 +153,26 @@
       return JSON.parse(localStorage.getItem('earth_registered_students')) || [];
     }
 
+    // ધોરણ ૧ થી ૧૨ નું માસ્ટર વેરિફિકેશન લિસ્ટ મેળવવું
+    function getMasterStudentsByStd() {
+      const data = localStorage.getItem('earth_master_students_by_std');
+      if (data) {
+        return JSON.parse(data);
+      }
+      // જો એડમિને નવું લિસ્ટ ન નાખ્યું હોય તો ડિફોલ્ટ લિસ્ટ (તમે અહીં પણ સીધા નામ ઉમેરી શકો છો)
+      return {
+        "1": [], "2": [], "3": [], "4": [], "5": [], "6": [],
+        "7": [], "8": [], "9": [],
+        "10": ["Raj Chavda", "Preet Patel"],
+        "11": ["Priya Shah"],
+        "12": ["Hetvi Desai"]
+      };
+    }
+
+    function getRegisteredStudents() {
+      return JSON.parse(localStorage.getItem('earth_registered_students')) || [];
+    }
+
     function handleStudentRegistration(e) {
       e.preventDefault();
       const name = document.getElementById('stuName').value.trim();
@@ -160,28 +180,34 @@
       const phone = document.getElementById('stuPhone').value.trim();
       const alertBox = document.getElementById('alertMsg');
 
-      const masterList = getMasterStudents();
-      const registeredList = getRegisteredStudents();
+      // ૧. ધોરણ વાઈઝ ડેટા ફેચ કરવો
+      const masterByStd = getMasterStudentsByStd();
+      const selectedStdList = masterByStd[std] || [];
 
-      // Check if student exists in Excel master list (Case insensitive check)
-      const isMatched = masterList.some(masterName => masterName.toLowerCase() === name.toLowerCase());
+      // ૨. તે પસંદ કરેલા ધોરણમાં નામ છે કે નહીં તેની કડક ચકાસણી
+      const isMatched = selectedStdList.some(masterName => 
+        masterName.trim().toLowerCase() === name.toLowerCase()
+      );
 
+      // જો તે ધોરણમાં નામ ન મળે તો પાસ બનશે જ નહીં
       if (!isMatched) {
         alertBox.className = "p-3 rounded-xl text-xs font-semibold mb-4 border bg-red-600/20 text-red-400 border-red-500/40 block";
-        alertBox.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i> <strong>Invalid Student Name!</strong> આ નામ ટ્યુશન ક્લાસિસની એક્સેલ શીટમાં મળ્યું નથી. કૃપા કરીને ઓફિસ પર સંપર્ક કરો.`;
-        return;
-      }
-
-      // Check if already registered
-      const existing = registeredList.find(s => s.name.toLowerCase() === name.toLowerCase());
-      if (existing) {
-        alertBox.className = "p-3 rounded-xl text-xs font-semibold mb-4 border bg-red-600/20 text-red-400 border-red-500/40 block";
-        alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>Registration Blocked!</strong> Aa naam parthi pass pehle thi banavi devama aavyo chhe. Ek student fakt ek j pass generate kari shake.`;
+        alertBox.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1"></i> <strong>માન્યતા અસ્વીકાર્ય!</strong> ધોરણ ${std} ના ક્લાસ રેકોર્ડમાં "${name}" નામ મળ્યું નથી. કૃપા કરીને સાચું ધોરણ પસંદ કરો અથવા ઓફિસ પર સંપર્ક કરો.`;
         document.getElementById('passDisplayArea').classList.add('hidden');
         return;
       }
 
-      // Generate New Pass ID
+      // ૩. એકવાર પાસ બની ગયા પછી ફરીથી બનવા પર પ્રતિબંધ
+      const registeredList = getRegisteredStudents();
+      const existing = registeredList.find(s => s.name.toLowerCase() === name.toLowerCase());
+      if (existing) {
+        alertBox.className = "p-3 rounded-xl text-xs font-semibold mb-4 border bg-red-600/20 text-red-400 border-red-500/40 block";
+        alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> <strong>રજીસ્ટ્રેશન બ્લોક!</strong> આ નામ પરથી પહેલેથી જ પાસ બની ગયેલ છે. એક વિદ્યાર્થી માટે માત્ર એક જ પાસ માન્ય છે.`;
+        document.getElementById('passDisplayArea').classList.add('hidden');
+        return;
+      }
+
+      // ૪. જો બધું બરાબર હોય તો જ પાસ બનશે
       const newId = "ECG2026-" + String(registeredList.length + 1).padStart(4, '0');
       const newEntry = {
         id: newId,
@@ -196,7 +222,7 @@
       localStorage.setItem('earth_registered_students', JSON.stringify(registeredList));
 
       alertBox.className = "p-3 rounded-xl text-xs font-semibold mb-4 border bg-emerald-600/20 text-emerald-400 border-emerald-500/40 block";
-      alertBox.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> રજીસ્ટ્રેશન સફળ થઈ ગયું છે! તમારો નવરાત્રી ગરબા પાસ નીચે આવી ગયો છે.`;
+      alertBox.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> વેરિફિકેશન સફળ! તમારો પાસ નીચે જનરેટ થઈ ગયો છે.`;
 
       showPass(newEntry);
     }
