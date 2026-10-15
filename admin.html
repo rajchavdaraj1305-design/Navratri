@@ -209,6 +209,8 @@
   <script>
     let html5Qr = null;
     let isCamRunning = false;
+    let isScanningPaused = false; // ડુપ્લિકેટ અટકાવવા માટેનો લોક
+    let html5Qr = null;
 
     function loginAdmin() {
       const p = document.getElementById('adminPass').value;
@@ -331,8 +333,10 @@
       refreshAllStats();
     }
     // Pass Verification Engine
+    // Pass Verification Engine
     function verifyPass(passId) {
-      if (!passId) return;
+      if (!passId || isScanningPaused) return; // જો સ્કેન પોઝ હોય તો આગળ ન વધવું
+
       const registered = JSON.parse(localStorage.getItem('earth_registered_students')) || [];
       const student = registered.find(s => s.id.toUpperCase() === passId.toUpperCase());
       const display = document.getElementById('scanResultDisplay');
@@ -348,6 +352,7 @@
           <p class="text-xs text-gray-300 mt-1">આ Pass ID સિસ્ટમમાં નોંધાયેલ નથી.</p>
         `;
         playAudio(false);
+        pauseScannerBriefly();
         return;
       }
 
@@ -366,6 +371,7 @@
           </div>
         `;
         playAudio(false);
+        pauseScannerBriefly();
         return;
       }
 
@@ -391,6 +397,15 @@
       `;
       playAudio(true);
       refreshAllStats();
+      pauseScannerBriefly();
+    }
+
+    // કેમેરાને ૩ સેકન્ડ માટે પોઝ કરવાનું ફંક્શન
+    function pauseScannerBriefly() {
+      isScanningPaused = true;
+      setTimeout(() => {
+        isScanningPaused = false;
+      }, 3000); // ૩ સેકન્ડ પછી જ બીજો પાસ સ્કેન થશે
     }
 
     function playAudio(isSuccess) {
