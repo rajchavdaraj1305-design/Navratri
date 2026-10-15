@@ -209,8 +209,7 @@
   <script>
     let html5Qr = null;
     let isCamRunning = false;
-    let isScanningPaused = false; // ડુપ્લિકેટ અટકાવવા માટેનો લોક
-    let html5Qr = null;
+    let isScanLocked = false; // Navo scanner lock variable
 
     function loginAdmin() {
       const p = document.getElementById('adminPass').value;
@@ -333,16 +332,18 @@
       refreshAllStats();
     }
     // Pass Verification Engine
-    // Pass Verification Engine
+   // Pass Verification Engine with 3-second Scan Cooldown
     function verifyPass(passId) {
-      if (!passId || isScanningPaused) return; // જો સ્કેન પોઝ હોય તો આગળ ન વધવું
+      if (!passId) return;
+      if (isScanLocked) return; // Jo lock hoy to fari scan na kare
 
       const registered = JSON.parse(localStorage.getItem('earth_registered_students')) || [];
       const student = registered.find(s => s.id.toUpperCase() === passId.toUpperCase());
       const display = document.getElementById('scanResultDisplay');
 
-      // 1. Not Registered / Invalid
+      // 1. Invalid Pass
       if (!student) {
+        isScanLocked = true;
         display.innerHTML = `
           <div class="w-16 h-16 rounded-full bg-red-600/30 text-red-500 flex items-center justify-center text-3xl mb-3 border border-red-500">
             <i class="fa-solid fa-ban"></i>
@@ -352,12 +353,13 @@
           <p class="text-xs text-gray-300 mt-1">આ Pass ID સિસ્ટમમાં નોંધાયેલ નથી.</p>
         `;
         playAudio(false);
-        pauseScannerBriefly();
+        setTimeout(() => { isScanLocked = false; }, 2500);
         return;
       }
 
-      // 2. Already Used (Duplicate Entry Blocker)
+      // 2. Already Used (Duplicate Entry)
       if (student.status === 'DONE') {
+        isScanLocked = true;
         display.innerHTML = `
           <div class="w-16 h-16 rounded-full bg-red-600 text-white flex items-center justify-center text-3xl mb-3 animate-bounce shadow-xl">
             <i class="fa-solid fa-triangle-exclamation"></i>
@@ -371,11 +373,12 @@
           </div>
         `;
         playAudio(false);
-        pauseScannerBriefly();
+        setTimeout(() => { isScanLocked = false; }, 2500);
         return;
       }
 
-      // 3. First Time Successful Scan
+      // 3. First Time Successful Scan (Green Screen)
+      isScanLocked = true;
       const timeNow = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
       student.status = 'DONE';
       student.entryTime = timeNow;
@@ -397,15 +400,11 @@
       `;
       playAudio(true);
       refreshAllStats();
-      pauseScannerBriefly();
-    }
 
-    // કેમેરાને ૩ સેકન્ડ માટે પોઝ કરવાનું ફંક્શન
-    function pauseScannerBriefly() {
-      isScanningPaused = true;
+      // 3 second sudhi camera hold rahese jethi duplicate na aave
       setTimeout(() => {
-        isScanningPaused = false;
-      }, 3000); // ૩ સેકન્ડ પછી જ બીજો પાસ સ્કેન થશે
+        isScanLocked = false;
+      }, 5000);
     }
 
     function playAudio(isSuccess) {
