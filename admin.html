@@ -68,19 +68,72 @@
       </div>
     </div>
 
-    <!-- Excel Master List Import Box -->
+   <!-- Master List Box (Std 1 to 12 Standard-wise) -->
     <div class="bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/15">
-      <h3 class="text-sm font-bold text-amber-300 mb-2 flex items-center gap-2">
-        <i class="fa-solid fa-file-excel"></i> એક્સેલ વિદ્યાર્થી યાદી (Master Student Verification List)
-      </h3>
-      <p class="text-xs text-gray-300 mb-3">
-        વિદ્યાર્થીઓના નામ અહીંથી એડ કરો અથવા અપડેટ કરો (દરેક લાઈનમાં એક નામ લખો):
-      </p>
-      <div class="flex gap-2">
-        <textarea id="masterNamesInput" rows="2" placeholder="Raj Chavda&#10;Preet Patel&#10;Priya Shah" class="w-full p-2.5 bg-black/50 border border-white/20 rounded-xl text-xs text-white focus:outline-none"></textarea>
-        <button onclick="saveMasterStudents()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl whitespace-nowrap">
-          સેવ લિસ્ટ
+      <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+        <div>
+          <h3 class="text-sm font-bold text-amber-300 flex items-center gap-2">
+            <i class="fa-solid fa-file-excel"></i> એક્સેલ વિદ્યાર્થી યાદી (ધોરણ ૧ થી ૧૨ વાઈઝ)
+          </h3>
+          <p class="text-xs text-gray-300">
+            દરેક ધોરણના બોક્સમાં તમારી એક્સેલ શીટમાંથી વિદ્યાર્થીઓના નામ પેસ્ટ કરો (દરેક લાઈનમાં ૧ નામ):
+          </p>
+        </div>
+        <button onclick="saveMasterList()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-lg transition">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> બધી યાદી સેવ કરો
         </button>
+      </div>
+
+      <!-- ધોરણ ૧ થી ૧૨ ના અલગ અલગ ખાના -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        <div class="bg-black/30 p-2.5 rounded-xl border border-white/10">
+          <label class="block text-xs font-bold text-amber-400 mb-1">Std 1</label>
+          <textarea id="masterInput1" rows="3" placeholder="Std 1 ના નામ..." class="w-full p-2 bg-black/60 border border-white/20 rounded-lg text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="bg-black/30 p-2.5 rounded-xl border border-white/10">
+          <label class="block text-xs font-bold text-amber-400 mb-1">Std 2</label>
+          <textarea id="masterInput2" rows="3" placeholder="Std 2 ના નામ..." class="w-full p-2 bg-black/60 border border-white/20 rounded-lg text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="bg-black/30 p-2.5 rounded-xl border border-white/10">
+          <label class="block text-xs font-bold text-amber-400 mb-1">Std 3</label>
+          <textarea id="masterInput3" rows="3" placeholder="Std 3 ના નામ..." class="w-full p-2 bg-black/60 border border-white/20 rounded-lg text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="bg-black/30 p-2.5 rounded-xl border border-white/10">
+          <label class="block text-xs font-bold text-amber-400 mb-1">Std 4</label>
+          <textarea id="masterInput4" rows="3" placeholder="Std 4 ના નામ..." class="w-full p-2 bg-black/60 border border-white/20 rounded-lg text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="bg-black/30 p-2.5 rounded-xl border border-white/10">
+          <label class="block text-xs font-bold text-amber-400 mb-1">Std 5</label>
+          <textarea id="masterInput5" rows="3" placeholder="Std 5 ના નામ..." class="w-full p-2 bg-black/60 border border-white/20 rounded-lg text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="bg-black/30 p-2.5 rounded-xl border border-white/10">
+          <label class="block text-xs font-bold text-amber-400 mb-1">Std 6</label>
+          <textarea id="masterInput6" rows="3" placeholder="Std 6 ના નામ..." class="w-full p-2 bg-black/60 border border-white/20 rounded-lg text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="bg-black/30 p-2.5 rounded-xl border border-white/10">
+          <label class="block text-xs font-bold text-blue-400 mb-1">Std 7</label>
+          <textarea id="masterInput7" rows="3" placeholder="Std 7 ના નામ..." class="w-full p-2 bg-black/60 border border-white/20 rounded-lg text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="bg-black/30 p-2.5 rounded-xl border border-white/10">
+          <label class="block text-xs font-bold text-blue-400 mb-1">Std 8</label>
+          <textarea id="masterInput8" rows="3" placeholder="Std 8 ના નામ..." class="w-full p-2 bg-black/60 border border-white/20 rounded-lg text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="bg-black/30 p-2.5 rounded-xl border border-white/10">
+          <label class="block text-xs font-bold text-blue-400 mb-1">Std 9</label>
+          <textarea id="masterInput9" rows="3" placeholder="Std 9 ના નામ..." class="w-full p-2 bg-black/60 border border-white/20 rounded-lg text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="bg-black/30 p-2.5 rounded-xl border border-white/10">
+          <label class="block text-xs font-bold text-emerald-400 mb-1">Std 10</label>
+          <textarea id="masterInput10" rows="3" placeholder="Std 10 ના નામ..." class="w-full p-2 bg-black/60 border border-white/20 rounded-lg text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="bg-black/30 p-2.5 rounded-xl border border-white/10">
+          <label class="block text-xs font-bold text-emerald-400 mb-1">Std 11</label>
+          <textarea id="masterInput11" rows="3" placeholder="Std 11 ના નામ..." class="w-full p-2 bg-black/60 border border-white/20 rounded-lg text-xs text-white focus:outline-none"></textarea>
+        </div>
+        <div class="bg-black/30 p-2.5 rounded-xl border border-white/10">
+          <label class="block text-xs font-bold text-purple-400 mb-1">Std 12</label>
+          <textarea id="masterInput12" rows="3" placeholder="Std 12 ના નામ..." class="w-full p-2 bg-black/60 border border-white/20 rounded-lg text-xs text-white focus:outline-none"></textarea>
+        </div>
       </div>
     </div>
 
@@ -133,7 +186,7 @@
 
       <div class="overflow-x-auto">
         <table class="w-full text-left text-xs">
-          <thead class="bg-black/50 text-gray-300 uppercase">
+         <thead class="bg-black/50 text-gray-300 uppercase">
             <tr>
               <th class="p-3">Pass ID</th>
               <th class="p-3">નામ</th>
@@ -141,6 +194,7 @@
               <th class="p-3">મોબાઈલ</th>
               <th class="p-3">સ્ટેટસ</th>
               <th class="p-3">એન્ટ્રી ટાઈમ</th>
+              <th class="p-3 text-center">Action</th>
             </tr>
           </thead>
           <tbody id="attendanceTableBody" class="divide-y divide-white/5">
@@ -173,26 +227,51 @@
       document.getElementById('loginScreen').classList.remove('hidden');
     }
 
+    function getMasterList() {
+      const data = localStorage.getItem('earth_master_students_by_std');
+      if (data) return JSON.parse(data);
+      let defaults = {};
+      for(let i = 1; i <= 12; i++) { defaults[i] = []; }
+      defaults["10"] = ["Raj Chavda", "Preet Patel"];
+      localStorage.setItem('earth_master_students_by_std', JSON.stringify(defaults));
+      return defaults;
+    }
+
     function loadDashboard() {
-      const masterList = JSON.parse(localStorage.getItem('earth_master_students')) || ["Raj Chavda", "Preet Patel", "Priya Shah"];
-      document.getElementById('masterNamesInput').value = masterList.join('\n');
+      const master = getMasterList();
+      for(let i = 1; i <= 12; i++) {
+        const el = document.getElementById('masterInput' + i);
+        if(el) {
+          el.value = (master[i] || []).join('\n');
+        }
+      }
       refreshAllStats();
     }
 
-    function saveMasterStudents() {
-      const raw = document.getElementById('masterNamesInput').value;
-      const list = raw.split('\n').map(s => s.trim()).filter(s => s.length > 0);
-      localStorage.setItem('earth_master_students', JSON.stringify(list));
-      alert(`સફળતાપૂર્વક ${list.length} વિદ્યાર્થીઓના નામ Excel વેરિફિકેશન લિસ્ટમાં સેવ થયા.`);
+    function saveMasterList() {
+      let master = {};
+      let totalCount = 0;
+      for(let i = 1; i <= 12; i++) {
+        const el = document.getElementById('masterInput' + i);
+        const names = el ? el.value.split('\n').map(s => s.trim()).filter(s => s.length > 0) : [];
+        master[i] = names;
+        totalCount += names.length;
+      }
+      localStorage.setItem('earth_master_students_by_std', JSON.stringify(master));
+      alert(`Dhoran 1 thi 12 ni yadi save thai gayi! Kul ${totalCount} vidyarthio no record che.`);
       refreshAllStats();
     }
 
     function refreshAllStats() {
-      const master = JSON.parse(localStorage.getItem('earth_master_students')) || [];
+      const master = getMasterList();
+      let totalMasterCount = 0;
+      for(let i = 1; i <= 12; i++) {
+        totalMasterCount += (master[i] || []).length;
+      }
       const registered = JSON.parse(localStorage.getItem('earth_registered_students')) || [];
       const entered = registered.filter(r => r.status === 'DONE').length;
 
-      document.getElementById('statMaster').innerText = master.length;
+      document.getElementById('statMaster').innerText = totalMasterCount;
       document.getElementById('statReg').innerText = registered.length;
       document.getElementById('statEntered').innerText = entered;
       document.getElementById('statPending').innerText = registered.length - entered;
@@ -217,9 +296,28 @@
               : '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">PENDING</span>'}
           </td>
           <td class="p-3 text-gray-400 font-mono text-[11px]">${s.entryTime || '-'}</td>
+          <td class="p-3 text-center">
+            <button onclick="deleteStudentRecord('${s.id}')" class="px-2.5 py-1 bg-red-600/30 hover:bg-red-600 text-red-300 hover:text-white rounded-lg text-xs font-semibold border border-red-500/40 transition">
+              <i class="fa-solid fa-trash mr-1"></i> Delete
+            </button>
+          </td>
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    // Student Registration Delete Function
+    function deleteStudentRecord(passId) {
+      if (!confirm(`Shu tame kharekhar aa student (${passId}) nu registration delete karva mango chho?`)) {
+        return;
+      }
+
+      let registered = JSON.parse(localStorage.getItem('earth_registered_students')) || [];
+      registered = registered.filter(s => s.id !== passId);
+      localStorage.setItem('earth_registered_students', JSON.stringify(registered));
+      
+      alert(`Pass ID ${passId} delete thai gyo. Have student navi rite form bhari shakshe.`);
+      refreshAllStats();
     }
 
     // Pass Verification Engine
