@@ -237,6 +237,18 @@
       return defaults;
     }
 
+    function getMasterList() {
+      const data = localStorage.getItem('earth_master_students_by_std');
+      if (data) return JSON.parse(data);
+      let defaults = {};
+      for(let i = 1; i <= 12; i++) { defaults[i] = []; }
+      defaults["10"] = ["Raj Chavda", "Preet Patel"];
+      defaults["11"] = ["Priya Shah"];
+      defaults["12"] = ["Hetvi Desai"];
+      localStorage.setItem('earth_master_students_by_std', JSON.stringify(defaults));
+      return defaults;
+    }
+
     function loadDashboard() {
       const master = getMasterList();
       for(let i = 1; i <= 12; i++) {
@@ -258,7 +270,7 @@
         totalCount += names.length;
       }
       localStorage.setItem('earth_master_students_by_std', JSON.stringify(master));
-      alert(`ધોરણ ૧ થી ૧૨ ની યાદી સેવ થઈ ગઈ છે! કુલ ${totalCount} વિદ્યાર્થીઓ સેવ થયા.`);
+      alert(`ધોરણ ૧ થી ૧૨ ની યાદી સેવ થઈ ગઈ! કુલ ${totalCount} વિદ્યાર્થીઓનો રેકોર્ડ સેવ થયો.`);
       refreshAllStats();
     }
     
@@ -306,9 +318,8 @@
       });
     }
 
-    // Student Registration Delete Function
     function deleteStudentRecord(passId) {
-      if (!confirm(`Shu tame kharekhar aa student (${passId}) nu registration delete karva mango chho?`)) {
+      if (!confirm(`શું તમે ખરેખર Pass ID (${passId}) નું રજીસ્ટ્રેશન ડિલીટ કરવા માંગો છો?`)) {
         return;
       }
 
@@ -316,10 +327,9 @@
       registered = registered.filter(s => s.id !== passId);
       localStorage.setItem('earth_registered_students', JSON.stringify(registered));
       
-      alert(`Pass ID ${passId} delete thai gyo. Have student navi rite form bhari shakshe.`);
+      alert(`Pass ID ${passId} ડિલીટ થઈ ગયો છે. હવે વિદ્યાર્થી ફરીથી સાચા ધોરણ સાથે રજીસ્ટ્રેશન કરી શકશે.`);
       refreshAllStats();
     }
-
     // Pass Verification Engine
     function verifyPass(passId) {
       if (!passId) return;
